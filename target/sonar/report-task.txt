@@ -1,0 +1,6 @@
+projectKey=com.notthebest:secretsanta
+serverUrl=http://54.221.60.109:9000
+serverVersion=25.4.0.105899
+dashboardUrl=http://54.221.60.109:9000/dashboard?id=com.notthebest%3Asecretsanta
+ceTaskId=7e23aa5b-ddc7-43a4-a4b8-f47edfe48b79
+ceTaskUrl=http://54.221.60.109:9000/api/ce/task?id=7e23aa5b-ddc7-43a4-a4b8-f47edfe48b79

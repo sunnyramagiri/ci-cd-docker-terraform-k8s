@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven'
+    }
+    environment {
+        SCANNER_HOME= tool 'sonar'
+    }
+    stages {
+        stage ('git download') {
+            steps {
+                git 'https://github.com/sunnyramagiri/ci-cd-docker-terraform-k8s.git'
+            }
+        }
+        stage ('mvn-compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage ('mvn package') {
+            steps {
+                sh 'mvn clean compile'
+                sh 'mvn package sonar:sonar -Dsonar.host.url=http://54.221.60.109:9000 -Dsonar.login=squ_7182a6e8a74576baaa8586689667ab2d6a3608ca'
+            }
+        }
+        stage ('docker build') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh 'docker build -t sunnyramagiri/myhtpd .'
+                    }
+                }
+            }
+        }
+        stage ('docker push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh 'docker push sunnyramagiri/myhtpd:latest'
+                    }
+                }
+            }
+        }
+        stage ('docker run') {
+            steps {
+                script {
+                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                         sh 'docker run -d -P --name myhtps sunnyramagiri/myhtpd:latest '
+                     }
+                }
+            }
+        }
+    }
+}
